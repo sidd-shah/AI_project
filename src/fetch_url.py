@@ -1,4 +1,5 @@
 import Queue
+import httplib
 import threading
 import urllib2
 
@@ -6,17 +7,18 @@ DEFAULT_ENCODING = 'latin-1'
 
 
 def read_url(url, queue):
+    data = ""
     try:
         data = urllib2.urlopen(url).read().decode(DEFAULT_ENCODING)
     except urllib2.HTTPError, e:
-        checksLogger.error('HTTPError = ' + str(e.code))
+        print('%s: HTTPError = ' % url + str(e.code))
     except urllib2.URLError, e:
-        checksLogger.error('URLError = ' + str(e.reason))
+        print('%s: URLError = ' % url + str(e.reason))
     except httplib.HTTPException, e:
-        checksLogger.error('HTTPException')
+        print('HTTPException')
     except Exception:
         import traceback
-        checksLogger.error('generic exception: ' + traceback.format_exc())
+        print('generic exception: ' + traceback.format_exc())
 
     print('Fetched %s from %s' % (len(data), url))
     queue.put([url, data])
