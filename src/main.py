@@ -8,7 +8,7 @@ from Summary import textRank
 from summ import FrequencySummarizer
 import sys
 import re
-
+from sum_rms import *
 DEFAULT_ENCODING = 'latin-1'
 
 
@@ -38,6 +38,7 @@ def main(search_term):
     article_list = []
     summary_list = []
     summary_new = []
+    summary_rms = []
     if not result_links:
         print "No links found"
     else:
@@ -60,16 +61,25 @@ def main(search_term):
                 # twittersearch(url_entry[0])
                 # twittersearch('Manchester United')
                 #  print url_entry[0]
+
+
+                reduction = Reduction()
+                reduction_ratio = 0.5
+                reduced_text = reduction.reduce(article, reduction_ratio)
+                summary_rms.append(reduced_text)
             except:
                 pass
     outfile1 = open("summary1", "w")
     outfile2 = open("summary2", "w")
+    outfile3 = open("summary3", "w")
     # dump_all(article_list)
     # dump_all(summary_list)
     outfile1.write(str(summary_new))
     outfile2.write(str(summary_list))
+    outfile3.write(str(summary_rms))
     outfile1.close()
     outfile2.close()
+    outfile3.close()
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
