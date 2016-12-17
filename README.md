@@ -12,20 +12,34 @@ Stony Brook University, Fall '16
 ### Setup
 * Build a Machine Learning ready environment in Python 2.7 as follows:
 * Using Anacondas:
-1. Create a virtual environment with the common ML packages - 
+* Create a virtual environment with the common ML packages - 
 ```
 $ conda install -n venv python=2.7 numpy scipy scikit-learn nltk
 ```
-2. Install additional packages using pip -
+* Activate the environment -
+```
+$ source activate venv
+```
+* Install additional packages using pip -
 ```
 $ pip install networkx BeautifulSoup lxml
 ```
-3. A few twitter streaming APIs
+* A few twitter streaming APIs -
 ```
 $ pip install tweepy twitter-text-python twython
 ```
+* Some nltk packages - 
+```
+$ python
+>>>> import nltk
+>>>> nltk.download(['stopwords', 'punkt', 'vader_lexicon'])
+```
 
 ### Run
+* Activate the environment - 
+```
+$ source activate venv
+```
 * Once the environment is up and running, the go ahead and play with `src/main.py`
 * Help:
 ```
