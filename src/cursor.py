@@ -22,4 +22,6 @@ def get_tweets(keyword, limit=1000, debug=False):
 
 
 if __name__ == '__main__':
-    get_tweets("http://indianexpress.com/article/india/pm-narendra-modi-sits-through-hamid-ansari-critique-interacts-only-with-bjp-mps-4431239/")
+    get_tweets(
+        "http://indianexpress.com/article/india/pm-narendra-modi-sits-through-hamid-ansari-critique-interacts-only-"
+        "with-bjp-mps-4431239/")

@@ -1,16 +1,14 @@
-from GoogleNews import newsSearch
-from bsReadability import readable
-import urllib2
-# from bs4 import BeautifulSoup
-# from twitter import twittersearch
-import fetch_url
-from Summary import textRank
-from summ import FrequencySummarizer
 import sys
-import re
+import urllib2
+
+import fetch_url
 from CentroidSummarizer import CentroidSummarizer
+from GoogleNews import newsSearch
+from Summary import textRank
+from bsReadability import readable
 from classify_tweets import clean, predict, vader
 from cursor import get_tweets
+from summ import FrequencySummarizer
 
 DEFAULT_ENCODING = 'latin-1'
 
