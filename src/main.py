@@ -8,6 +8,7 @@ from Summary import textRank
 from summ import FrequencySummarizer
 import sys
 import re
+from CentroidSummarizer import CentroidSummarizer
 
 DEFAULT_ENCODING = 'latin-1'
 
@@ -30,7 +31,7 @@ def get_only_text(url):
 
 
 def main(search_term):
-    result_count = 15
+    result_count = 2
     result_links = newsSearch(search_term, result_count)
 
     dump_all(result_links)
@@ -43,6 +44,7 @@ def main(search_term):
     else:
         result = fetch_url.fetch_parallel(result_links)
         fs = FrequencySummarizer()
+        cs = CentroidSummarizer()
         while not result.empty():
             try:
                 url_entry = result.get()
@@ -50,18 +52,22 @@ def main(search_term):
                 # title, text = get_only_text(url_entry[1])
                 print '----------------------------------'
                 # print title
-                summary = textRank(article).encode('ascii', 'ignore')
-                article_list.append(article)
-                summary_list.append(summary + "\n******************************************\n")
-                for s in fs.summarize(article, 3):
-                    print '*', s
-                    summary_new.append(s)
-                summary_new.append("\n******************************************\n")
+                # summary = textRank(article).encode('ascii', 'ignore')
+                # article_list.append(article)
+                # summary_list.append(summary + "\n******************************************\n")
+                # for s in fs.summarize(article, 3):
+                #     print '*', s
+                #     summary_new.append(s)
+                # summary_new.append("\n******************************************\n")
+                cs.add_article(article)
                 # twittersearch(url_entry[0])
                 # twittersearch('Manchester United')
                 #  print url_entry[0]
-            except:
-                pass
+
+            except Exception as ex:
+                print ex
+        print "Calling summarize"
+        cs.summarize()
     outfile1 = open("summary1", "w")
     outfile2 = open("summary2", "w")
     # dump_all(article_list)
