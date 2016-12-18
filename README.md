@@ -32,7 +32,7 @@ $ pip install tweepy twitter-text-python twython
 ```
 $ python
 >>>> import nltk
->>>> nltk.download(['stopwords', 'punkt', 'vader_lexicon'])
+>>>> nltk.download(['stopwords', 'punkt', 'vader_lexicon', 'brown'])
 ```
 
 ### Run
