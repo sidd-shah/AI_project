@@ -103,9 +103,11 @@ def main(search_term):
                 # summary = textRank(article).encode('ascii', 'ignore')
                 # article_list.append(article)
                 # summary_list.append(summary + "\n******************************************\n")
+                # sum = ""
                 # for s in fs.summarize(article, 3):
                 #     print '*', s
-                #     summary_new.append(s)
+                #     sum += s+"."
+                # summary_new.append(sum)
                 # summary_new.append("\n******************************************\n")
                 cs.add_article(article)
                 # twittersearch(url_entry[0])
@@ -126,7 +128,7 @@ def main(search_term):
                     nt_list.append(y[0])
                     n_users.append(y[1])
             except Exception as ex:
-                # print ex
+                print ex
                 pass
         # print "Calling summarize"
         # cs.summarize()
@@ -145,9 +147,19 @@ def main(search_term):
         summaries.append(cs.summarize())
 
     outfile  = open('summary_' + search_term,'w')
-    outfile.write("\n".join([summary for summary in summaries]))
+    for index, summary in  enumerate(summaries):
+        outfile.write("\n============================================\
+            LINKS: "+ str(clust_dict[index]) +"\n\n" + summary.encode('ascii','ignore'))
+    outfile.close()
+
+    outfile = open('summary1_' + search_term,'w')
+    print(len(url_list), len(summary_new))
+    for index, summary in enumerate(summary_new):
+        outfile.write("\n============================================\
+            LINKS: "+url_list[index]+"\n\n"+ summary.encode('ascii','ignore'))
     outfile.close()
     
+
     pnr = "+ "+ str(len(pt_list)) +"/ - " + str(len(nt_list))
     # for clus in clust_dict:
         # print clus

@@ -37,7 +37,8 @@ class CentroidSummarizer:
 		parsedDocuments = []
 		
 		for document in documents:
-			parsedDocuments.append(HTMLParser().unescape(document))
+			if len(document) > 500:
+				parsedDocuments.append(HTMLParser().unescape(document))
 		self.documents = parsedDocuments
 		
 
@@ -141,7 +142,7 @@ class CentroidSummarizer:
         # self.generate_summary(sents)
 
         # print "\n\nSelected Sentences\n"
-        summaries, removed_sentences = self.generate_summary(selected_sents)
+        summaries, removed_sentences = self.generate_summary(sents)
 
         # self.document_summaries(summaries)
         # print removed_sentences
