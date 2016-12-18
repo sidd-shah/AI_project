@@ -34,8 +34,12 @@ class CentroidSummarizer:
 		print cosine
 
 	def set_documents(self,documents):
-		self.documents = documents
-
+		parsedDocuments = []
+		
+		for document in documents:
+			parsedDocuments.append(HTMLParser().unescape(document))
+		self.documents = parsedDocuments
+		
 	def generate_summary(self, sents):
 
 		cv = CountVectorizer(ngram_range=(2, 2))
