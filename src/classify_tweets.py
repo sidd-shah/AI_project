@@ -107,9 +107,11 @@ def main():
 def clean(list_of_tweets_texts):
     p = ttp.Parser(include_spans=True)
     dataset = list_of_tweets_texts
-    result_set = []
-    for mystring in dataset:
+    tweets = []
+    authors = []
+    for mystring, username in dataset:
         try:
+
             mystring.encode('utf8', 'ignore')
             sentence = mystring
             result = p.parse(mystring)
@@ -119,10 +121,11 @@ def clean(list_of_tweets_texts):
                 sentence = mystring[:start] + mystring[end:]
             except:
                 pass
-            result_set.append(sentence)
+            tweets.append(sentence)
+            authors.append(username)
         except (IndexError, UnicodeDecodeError) as e:
             pass
-    return result_set
+    return tweets, authors
 
 
 def predict(list_of_tweet_texts):

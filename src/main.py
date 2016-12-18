@@ -11,6 +11,7 @@ from cursor import get_tweets
 from summ import FrequencySummarizer
 from cluster_articles import makeClusters
 import json
+import pprint
 
 DEFAULT_ENCODING = 'latin-1'
 
@@ -43,8 +44,9 @@ def sentiment_analyze(link):
     tweets = get_tweets(link)
     texts = []
     for tweet in tweets:
-        texts.append(tweet.text)
-    texts = clean(texts)
+        texts.append([tweet.text, tweet.user.name])
+
+    texts, authors = clean(texts)
     analysis = predict(texts)
     vader_analysis = vader(texts)
 
@@ -54,9 +56,9 @@ def sentiment_analyze(link):
     for i in range(len(texts)):
         score = 0.25 * analysis[i] + 0.75 * vader_analysis[i]
         if score > 0.8:
-            positive_tweets.append(texts[i])
+            positive_tweets.append([texts[i], authors[i]])
         elif score < -0.8:
-            negative_tweets.append()
+            negative_tweets.append([texts[i], authors[i]])
 
     # print "*******************************************************"
     # print "++++++++++++++++++++++POSITIVE+++++++++++++++++++++++++"
@@ -81,6 +83,8 @@ def main(search_term):
     sentiment_list = []
     pt_list = []
     nt_list = []
+    p_users = []
+    n_users = []
     url_list = []
     summary_new = []
     if not result_links:
@@ -116,9 +120,11 @@ def main(search_term):
 
                 pt, nt = sentiment_analyze(link)
                 for x in pt:
-                    pt_list.append(x)
+                    pt_list.append(x[0])
+                    p_users.append(x[1])
                 for y in nt:
-                    nt_list.append(y)
+                    nt_list.append(y[0])
+                    n_users.append(y[1])
             except Exception as ex:
                 # print ex
                 pass
@@ -137,10 +143,12 @@ def main(search_term):
     for artic in article_dict:
         cs.set_documents(artic)
         summaries.append(cs.summarize())
-
+    pnr = "+ "+ str(len(pt_list)) +"/ - " + str(len(nt_list))
     # for clus in clust_dict:
         # print clus
-    result = {'status': clust_dict, 'articles': summaries, 'positive': pt_list, 'neg': nt_list}
+    result = {'status': clust_dict, 'articles': summaries, 'positive': pt_list, 'neg': nt_list,
+              'p_users': p_users, 'n_users': n_users, 'no_stories': len(article_list), 'no_tweets': (len(pt)+len(nt)),
+              'pnr': pnr}
     # print result
     print json.dumps(result)
 
