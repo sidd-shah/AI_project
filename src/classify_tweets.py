@@ -127,7 +127,8 @@ def clean(list_of_tweets_texts):
 
 def predict(list_of_tweet_texts):
     dataset = list_of_tweet_texts
-    classifier_path = sys.path.append(os.path.join(os.path.dirname(__file__), "classifier/pol.p"))
+    classifier_path = "%s/classifier/pol.p" % os.path.join(os.path.dirname(__file__))
+    # print classifier_path
     vectorizer, svm, nb = load_classifier(classifier_path)
     data_vectors = vectorizer.transform(dataset)
     svm_predict = svm.predict(data_vectors)

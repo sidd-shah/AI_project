@@ -10,6 +10,7 @@ from classify_tweets import clean, predict, vader
 from cursor import get_tweets
 from summ import FrequencySummarizer
 from cluster_articles import makeClusters
+import json
 
 DEFAULT_ENCODING = 'latin-1'
 
@@ -38,7 +39,7 @@ def get_only_text(url):
 
 
 def sentiment_analyze(link):
-    print "Scanning tweets for link %s" % link
+    # print "Scanning tweets for link %s" % link
     tweets = get_tweets(link)
     texts = []
     for tweet in tweets:
@@ -57,14 +58,14 @@ def sentiment_analyze(link):
         elif score < -0.8:
             negative_tweets.append()
 
-    print "*******************************************************"
-    print "++++++++++++++++++++++POSITIVE+++++++++++++++++++++++++"
-    print "*******************************************************"
-    print positive_tweets
-    print "*******************************************************"
-    print "                      NEGATIVE                         "
-    print "*******************************************************"
-    print negative_tweets
+    # print "*******************************************************"
+    # print "++++++++++++++++++++++POSITIVE+++++++++++++++++++++++++"
+    # print "*******************************************************"
+    # print positive_tweets
+    # print "*******************************************************"
+    # print " ---------------------NEGATIVE--------------------------"
+    # print "*******************************************************"
+    # print negative_tweets
 
     return positive_tweets, negative_tweets
 
@@ -73,11 +74,13 @@ def main(search_term):
     result_count = 15
     result_links = newsSearch(search_term, result_count)
 
-    dump_all(result_links)
+    # dump_all(result_links)
 
     article_list = []
     summary_list = []
     sentiment_list = []
+    pt_list = []
+    nt_list = []
     url_list = []
     summary_new = []
     if not result_links:
@@ -91,7 +94,7 @@ def main(search_term):
                 url_entry = result.get()
                 article = readable(url_entry[0], url_entry[1], DEFAULT_ENCODING)
                 # title, text = get_only_text(url_entry[1])
-                print '----------------------------------'
+                # print '----------------------------------'
                 # print title
                 # summary = textRank(article).encode('ascii', 'ignore')
                 # article_list.append(article)
@@ -102,40 +105,44 @@ def main(search_term):
                 # summary_new.append("\n******************************************\n")
                 cs.add_article(article)
                 # twittersearch(url_entry[0])
-                # twittersearch('Manchester United')
-                #  print url_entry[0]
-                # try:
-                # url_entry = result.get()
                 link = url_entry[0]
                 url_list.append(link)
                 article = readable(url_entry[0], url_entry[1], DEFAULT_ENCODING)
                 # title, text = get_only_text(url_entry[1])
-                summary = textRank(article).encode('ascii', 'ignore')
+                # summary = textRank(article).encode('ascii', 'ignore')
                 article_list.append(article)
-                summary_list.append(summary)
-                sentiment_list.append(sentiment_analyze(link))
-                # except error as e:
-                #     print "EXCEPT %s" % e
-                #     pass
+                # summary_list.append(summary)
+                # sentiment_list.append(sentiment_analyze(link))
 
+                pt, nt = sentiment_analyze(link)
+                for x in pt:
+                    pt_list.append(x)
+                for y in nt:
+                    nt_list.append(y)
             except Exception as ex:
-                print ex
-        print "Calling summarize"
-        cs.summarize()
+                # print ex
+                pass
+        # print "Calling summarize"
+        # cs.summarize()
     clusters = makeClusters(article_list)
-    clust_dict = {}
-    for index, cluster in enumerate(clusters):
-        clust_dict[cluster] = article_list[index]
-    print clusters, url_list
-    outfile1 = open("summary1", "w")
-    outfile2 = open("summary2", "w")
-    # dump_all(article_list)
-    # dump_all(summary_list)
-    outfile1.write(str(summary_new))
-    outfile2.write(str(summary_list))
-    outfile1.close()
-    outfile2.close()
+    clust_dict = [[], [], [], [], []]
+    article_dict = [[], [], [], [], []]
+    summaries = []
+    cs = CentroidSummarizer()
 
+    for index, cluster in enumerate(clusters):
+        clust_dict[cluster].append(url_list[index])
+        article_dict[cluster].append(article_list[index])
+
+    for artic in article_dict:
+        cs.set_documents(artic)
+        summaries.append(cs.summarize())
+
+    # for clus in clust_dict:
+        # print clus
+    result = {'status': clust_dict, 'articles': summaries, 'positive': pt_list, 'neg': nt_list}
+    # print result
+    print json.dumps(result)
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
