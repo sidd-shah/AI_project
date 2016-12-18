@@ -1,6 +1,8 @@
 import pickle
 from ttp import ttp
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import sys
+import os
 
 
 def load_classifier(classifier):
@@ -125,7 +127,8 @@ def clean(list_of_tweets_texts):
 
 def predict(list_of_tweet_texts):
     dataset = list_of_tweet_texts
-    vectorizer, svm, nb = load_classifier("classifier/pol.p")
+    classifier_path = sys.path.append(os.path.join(os.path.dirname(__file__), "classifier/pol.p"))
+    vectorizer, svm, nb = load_classifier(classifier_path)
     data_vectors = vectorizer.transform(dataset)
     svm_predict = svm.predict(data_vectors)
     nb_predict = nb.predict(data_vectors)
