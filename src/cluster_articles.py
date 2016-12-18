@@ -38,11 +38,12 @@ def dump_all(l):
     for i in l:
         print i
 
+
 def makeClusters(article_list):
     tfidf = TfidfVectorizer(stop_words='english',
                             use_idf=True, tokenizer=tokenize_and_stem, ngram_range=(1, 2)).fit_transform(article_list)
     dist = cosine_similarity(tfidf)
-    print dist
+    # print dist
     num_clusters = 5
 
     km = KMeans(n_clusters=num_clusters)
@@ -51,36 +52,4 @@ def makeClusters(article_list):
     return clusters
 
 
-def main(search_term):
-    result_count = 15
-    result_links = newsSearch(search_term, result_count)
-    dump_all(result_links)
 
-    article_list = []
-    summary_list = []
-    summary_new = []
-    url_list =[]
-    if not result_links:
-        print "No links found"
-    else:
-        result = fetch_url.fetch_parallel(result_links)
-        while not result.empty():
-            try:
-                url_entry = result.get()
-                article = readable(url_entry[0], url_entry[1], DEFAULT_ENCODING)
-                url_list.append(url_entry[0])
-                article_list.append(article)
-
-            except Exception as ex:
-                print ex
-        # cs.summarize()
-        clusters = makeClusters(article_list)
-
-
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print_usage()
-        exit(-1)
-    search_term = '+'.join(sys.argv[1:])
-
-    main(search_term)

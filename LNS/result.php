@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html>
+<?php
+include_once 'server/article_class.php';
+//
+$query = $_GET["query"];
+
+
+$art = new Article($query);
+//echo $art->getTweets();
+//echo "<br><br><br><br> Summaries <br><br><br><br>";
+//echo $art->getSummaries();
+
+//echo "<br>";
+?>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Live News Summarizer | Dashboard</title>
+  <title>New Summarizer & Analyzer | Dashboard</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -35,7 +48,7 @@
     <!-- Logo -->
     <a href="index2.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>L</b>NS</span>
+      <span class="logo-mini"><b>N</b>SA</span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><b>Live News</b></span>
     </a>
@@ -72,7 +85,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Tweets</span>
-              <span class="info-box-number">904</span>
+              <span class="info-box-number"><?php echo $art->getNoTweets(); ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -85,14 +98,13 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Articles</span>
-              <span class="info-box-number">41</span>
+              <span class="info-box-number"><?php echo $art->no_stories; ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
         </div>
         <!-- /.col -->
-
         <!-- fix for small devices only -->
         <div class="clearfix visible-sm-block"></div>
 
@@ -103,7 +115,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Positive - Negative Ratio</span>
-              <span class="info-box-number">760</span>
+              <span class="info-box-number"> <?php echo $art->pnr; ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -125,7 +137,7 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
-<h2 class="page-header">Donald Trump - In News</h2>
+<h2 class="page-header"><?php echo $query; ?>- In News</h2>
 
       <div class="row">
         <div class="col-md-6">
@@ -140,39 +152,7 @@
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="tab_1">
-                <b>How to use:</b>
-
-                <p>Exactly like the original bootstrap tabs except you should use
-                  the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
-                A wonderful serenity has taken possession of my entire soul,
-                like these sweet mornings of spring which I enjoy with my whole heart.
-                I am alone, and feel the charm of existence in this spot,
-                which was created for the bliss of souls like mine. I am so happy,
-                my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
-                that I neglect my talents. I should be incapable of drawing a single stroke
-                at the present moment; and yet I feel that I never was a greater artist than now.
-                aasd
-                <p>Exactly like the original bootstrap tabs except you should use
-                  the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
-                A wonderful serenity has taken possession of my entire soul,
-                like these sweet mornings of spring which I enjoy with my whole heart.
-                I am alone, and feel the charm of existence in this spot,
-                which was created for the bliss of souls like mine. I am so happy,
-                my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
-                that I neglect my talents. I should be incapable of drawing a single stroke
-                at the present moment; and yet I feel that I never was a greater artist than now.
-                aasd
-                <p>Exactly like the original bootstrap tabs except you should use
-                  the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
-                A wonderful serenity has taken possession of my entire soul,
-                like these sweet mornings of spring which I enjoy with my whole heart.
-                I am alone, and feel the charm of existence in this spot,
-                which was created for the bliss of souls like mine. I am so happy,
-                my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
-                that I neglect my talents. I should be incapable of drawing a single stroke
-                at the present moment; and yet I feel that I never was a greater artist than now.
-                aasd
-
+                <?php echo $art->getSummaries(); ?>
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="tab_2">
@@ -218,45 +198,15 @@
 
 				    <!-- timeline time label -->
 				    <li class="time-label">
-				        <span class="bg-blue">
-				            10 Feb. 2014
-				        </span>
+				   
 				    </li>
 				    <!-- /.timeline-label -->
 
 				    <!-- timeline item -->
-				    <li>
-				        <!-- timeline icon -->
-				        <i class="fa fa-user bg-aqua"></i>
-				        <div class="timeline-item">
-				            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
 
-				            <h3 class="timeline-header"><a href="#">Clinton</a></h3>
-
-				            <div class="timeline-body">
-				                
-				                Content goes here
-				            </div>
-
-				        </div>
-				    </li>
 				    <!-- END timeline item -->
 				    		    <!-- timeline item -->
-				    <li>
-				        <!-- timeline icon -->
-				        <i class="fa fa-user bg-aqua"></i>
-				        <div class="timeline-item">
-				            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-				            <h3 class="timeline-header"><a href="#">Bill</a></h3>
-
-				            <div class="timeline-body">
-				                
-				                Content goes here
-				            </div>
-
-				        </div>
-				    </li>
+				   <?php echo $art->getTweets(); ?>
 				    <!-- END timeline item -->
 				    <li>
 				    <i class="fa fa-clock-o bg-gray"></i>
