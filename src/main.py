@@ -9,6 +9,7 @@ from bsReadability import readable
 from classify_tweets import clean, predict, vader
 from cursor import get_tweets
 from summ import FrequencySummarizer
+from cluster_articles import makeClusters
 
 DEFAULT_ENCODING = 'latin-1'
 
@@ -77,6 +78,7 @@ def main(search_term):
     article_list = []
     summary_list = []
     sentiment_list = []
+    url_list = []
     summary_new = []
     if not result_links:
         print "No links found"
@@ -105,6 +107,7 @@ def main(search_term):
                 # try:
                 # url_entry = result.get()
                 link = url_entry[0]
+                url_list.append(link)
                 article = readable(url_entry[0], url_entry[1], DEFAULT_ENCODING)
                 # title, text = get_only_text(url_entry[1])
                 summary = textRank(article).encode('ascii', 'ignore')
@@ -119,6 +122,11 @@ def main(search_term):
                 print ex
         print "Calling summarize"
         cs.summarize()
+    clusters = makeClusters(article_list)
+    clust_dict = {}
+    for index, cluster in enumerate(clusters):
+        clust_dict[cluster] = article_list[index]
+    print clusters, url_list
     outfile1 = open("summary1", "w")
     outfile2 = open("summary2", "w")
     # dump_all(article_list)
