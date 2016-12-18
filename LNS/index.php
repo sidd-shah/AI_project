@@ -69,7 +69,7 @@
               </div>
             <!-- /.box-header -->
             <!-- form start -->
-              <form role="form" action="server/search.php" method="get">
+              <form role="form" action="result.php" method="get">
               <div class="box-body">
                 <div class="form-group">
                     <div class="input-group input-group">

@@ -1,5 +1,18 @@
 <!DOCTYPE html>
 <html>
+<?php
+include_once 'server/article_class.php';
+//
+$query = $_GET["query"];
+
+
+$art = new Article($query);
+//echo $art->getTweets();
+//echo "<br><br><br><br> Summaries <br><br><br><br>";
+//echo $art->getSummaries();
+
+//echo "<br>";
+?>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -140,39 +153,7 @@
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="tab_1">
-                <b>How to use:</b>
-
-                <p>Exactly like the original bootstrap tabs except you should use
-                  the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
-                A wonderful serenity has taken possession of my entire soul,
-                like these sweet mornings of spring which I enjoy with my whole heart.
-                I am alone, and feel the charm of existence in this spot,
-                which was created for the bliss of souls like mine. I am so happy,
-                my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
-                that I neglect my talents. I should be incapable of drawing a single stroke
-                at the present moment; and yet I feel that I never was a greater artist than now.
-                aasd
-                <p>Exactly like the original bootstrap tabs except you should use
-                  the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
-                A wonderful serenity has taken possession of my entire soul,
-                like these sweet mornings of spring which I enjoy with my whole heart.
-                I am alone, and feel the charm of existence in this spot,
-                which was created for the bliss of souls like mine. I am so happy,
-                my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
-                that I neglect my talents. I should be incapable of drawing a single stroke
-                at the present moment; and yet I feel that I never was a greater artist than now.
-                aasd
-                <p>Exactly like the original bootstrap tabs except you should use
-                  the custom wrapper <code>.nav-tabs-custom</code> to achieve this style.</p>
-                A wonderful serenity has taken possession of my entire soul,
-                like these sweet mornings of spring which I enjoy with my whole heart.
-                I am alone, and feel the charm of existence in this spot,
-                which was created for the bliss of souls like mine. I am so happy,
-                my dear friend, so absorbed in the exquisite sense of mere tranquil existence,
-                that I neglect my talents. I should be incapable of drawing a single stroke
-                at the present moment; and yet I feel that I never was a greater artist than now.
-                aasd
-
+                <?php echo $art->getSummaries(); ?>
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="tab_2">
@@ -242,21 +223,7 @@
 				    </li>
 				    <!-- END timeline item -->
 				    		    <!-- timeline item -->
-				    <li>
-				        <!-- timeline icon -->
-				        <i class="fa fa-user bg-aqua"></i>
-				        <div class="timeline-item">
-				            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-				            <h3 class="timeline-header"><a href="#">Bill</a></h3>
-
-				            <div class="timeline-body">
-				                
-				                Content goes here
-				            </div>
-
-				        </div>
-				    </li>
+				   <?php echo $art->getTweets(); ?>
 				    <!-- END timeline item -->
 				    <li>
 				    <i class="fa fa-clock-o bg-gray"></i>
