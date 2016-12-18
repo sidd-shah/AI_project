@@ -8,25 +8,41 @@ from HTMLParser import HTMLParser
 import nltk
 from nltk.corpus import brown
 from parser import NPExtractor
+from sklearn.feature_extraction.text import TfidfVectorizer
+import re
+
 class CentroidSummarizer:
 
 	def __init__(self):
 		self.documents = []
 
+	def print_document_summaries(self, summaries):
+		for index in range(len(self.documents)):
+			if index in summaries:
+				print "\n\n\nDocument ", index
+				print ". ".join(re.sub('[\t|\n]+', '', summary.strip()) for summary in summaries[index])
+			else:
+				print "Index not found"
+
+	def cosine_similarity(self, sentences):
+		vect = TfidfVectorizer(min_df=1)
+		tfidf = vect.fit_transform(sentences)
+		cosine=(tfidf * tfidf.T).A
+		print cosine
 
 	def generate_summary(self, sents):
 
-		cv = CountVectorizer()
+		cv = CountVectorizer(ngram_range=(2, 2))
 		bow_matrix = cv.fit_transform(sents)
 		
 		normalized = TfidfTransformer().fit_transform(bow_matrix)
-	
+		
 		similarity_graph = normalized * normalized.T
 
 		nx_graph = nx.from_scipy_sparse_matrix(similarity_graph)
 		# print "graph built"
 		scores = nx.pagerank(nx_graph)
-		text_rank_graph = sorted(((scores[i],s) for i,s in enumerate(sents)), reverse=True)
+		text_rank_graph = sorted(((scores[i],s) for i,s in enumerate(sents)), reverse=False)
 		# print text_rank_graph
 		number_of_nodes = int(0.3*len(text_rank_graph))
 		
@@ -34,15 +50,28 @@ class CentroidSummarizer:
 			number_of_nodes = 3
 			
 		del text_rank_graph[number_of_nodes:]
+		summaries = {}
+		removed_sentences = []
+		for _, sentence in text_rank_graph:
+
+			for index, document in enumerate(self.documents):
+				if sentence in document:
+					found = True
+					if index in summaries:
+						sentences = summaries[index]
+						sentences.append(sentence.strip())
+						summaries[index] = sentences
+					else:
+						summaries[index] = [sentence.strip()]
 		
-		summary = ' '.join(word for _,word in text_rank_graph)
-		print summary
-		return summary
+		# summary = ' '.join(sentence.strip() for _,sentence in text_rank_graph)
+		# print summary
+		return summaries, removed_sentences
 
 	def add_article(self, document):
-		print "ORIGINAL"
-		print HTMLParser().unescape(document)
-		
+		print "Adding document", len(self.documents)
+		# print "ORIGINAL"
+		# print HTMLParser().unescape(document)
 		self.documents.append(HTMLParser().unescape(document))
 
 	def tf(self, sentenct):
@@ -61,17 +90,17 @@ class CentroidSummarizer:
 				for tag in result:
 					# print tag
 					tag = tag.lower()
-					print tag
+					# print tag
 					if tag in sentence_tags_dict.keys():
 						value = sentence_tags_dict[tag]
-						print "Found", tag, value
-						if value:
-							sentence_tags_dict[tag] = value.append(index)
-						else:
-							print value
+						# print "Found", tag, value
+						value.append(index)
+						sentence_tags_dict[tag] = value
+						# else:
+							# print value
 					else:
 						sentence_tags_dict[tag] = [index,]
-						print "Set", tag, sentence_tags_dict[tag]
+						# print "Set", tag, sentence_tags_dict[tag]
 				# print "This sentence is about: %s" % ", ".join(result)
 				sents.append(sent)
 
@@ -82,21 +111,32 @@ class CentroidSummarizer:
 
 		selected_sents = set()
 		for feature in features:
-			print feature
+			# print feature
 			if feature in sentence_tags_dict.keys():
-				print "FOUND FEATURE"
+				# print "FOUND FEATURE"
+				# print feature
 				if sentence_tags_dict[feature]:
 					for index in sentence_tags_dict[feature]:
 						selected_sents.add(sents[index])
-			# else:
-				# print "Feature not a topic"
+			else:
+				pass
 
-		print "\n\nAll Sentences Summary\n\n\n"
-		self.generate_summary(sents)
+		print len(sents)
+		print len(selected_sents)
+		print "Documents", len(self.documents)
+		# print "Cosine Similarity"
+		# self.cosine_similarity(sents)						
 
-		print "\n\nSelected Sentences\n\n\n"
-		self.generate_summary(selected_sents)
+		# print "\n\nAll Sentences Summary\n\n"
+		# self.generate_summary(sents)
 
+		print "\n\nSelected Sentences\n\n"
+		summaries, removed_sentences = self.generate_summary(selected_sents)
+
+
+		self.print_document_summaries(summaries)
+		print removed_sentences
+		
 		# cv = CountVectorizer()
 		# count_vec = cv.fit_transform(sents)
 		# tf_transformer = TfidfTransformer(use_idf=True)
