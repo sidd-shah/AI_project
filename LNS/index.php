@@ -69,11 +69,11 @@
               </div>
             <!-- /.box-header -->
             <!-- form start -->
-              <form role="form" action="result.html">
+              <form role="form" action="server/search.php" method="get">
               <div class="box-body">
                 <div class="form-group">
                     <div class="input-group input-group">
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" name="query">
                           <span class="input-group-btn">
                             <button type="submit" class="btn btn-info btn-flat">Go!</button>
                           </span>
