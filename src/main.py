@@ -118,7 +118,7 @@ def main(search_term):
                 # summary = textRank(article).encode('ascii', 'ignore')
                 article_list.append(article)
                 # summary_list.append(summary)
-                # sentiment_list.append(sentiment_analyze(link))
+                sentiment_list.append(sentiment_analyze(link))
 
                 pt, nt = sentiment_analyze(link)
                 for x in pt:
@@ -128,7 +128,7 @@ def main(search_term):
                     nt_list.append(y[0])
                     n_users.append(y[1])
             except Exception as ex:
-                print ex
+                # print ex
                 pass
         # print "Calling summarize"
         # cs.summarize()
@@ -153,7 +153,7 @@ def main(search_term):
     outfile.close()
 
     outfile = open('summary1_' + search_term,'w')
-    print(len(url_list), len(summary_new))
+    # print(len(url_list), len(summary_new))
     for index, summary in enumerate(summary_new):
         outfile.write("\n============================================\
             LINKS: "+url_list[index]+"\n\n"+ summary.encode('ascii','ignore'))

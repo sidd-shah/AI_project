@@ -31,7 +31,7 @@ class CentroidSummarizer:
         vect = TfidfVectorizer(min_df=1)
         tfidf = vect.fit_transform(sentences)
         cosine = (tfidf * tfidf.T).A
-        print cosine
+        # print cosine
 
     def set_documents(self,documents):
 		parsedDocuments = []
