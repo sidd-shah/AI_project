@@ -11,24 +11,30 @@ from parser import NPExtractor
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 
+
 class CentroidSummarizer:
 
 	def __init__(self):
 		self.documents = []
 
-	def print_document_summaries(self, summaries):
+	def document_summaries(self, summaries):
+		result = ""
 		for index in range(len(self.documents)):
 			if index in summaries:
-				print "\n\n\nDocument ", index
-				print ". ".join(re.sub('[\t|\n]+', '', summary.strip()) for summary in summaries[index])
+				# print "\n\n\nDocument ", index
+				result += ". ".join(re.sub('[\t|\n]+', '', summary.strip()) for summary in summaries[index])
 			else:
 				print "Index not found"
+		return result
 
 	def cosine_similarity(self, sentences):
 		vect = TfidfVectorizer(min_df=1)
 		tfidf = vect.fit_transform(sentences)
 		cosine=(tfidf * tfidf.T).A
 		print cosine
+
+	def set_documents(self,documents):
+		self.documents = documents
 
 	def generate_summary(self, sents):
 
@@ -69,7 +75,7 @@ class CentroidSummarizer:
 		return summaries, removed_sentences
 
 	def add_article(self, document):
-		print "Adding document", len(self.documents)
+		# print "Adding document", len(self.documents)
 		# print "ORIGINAL"
 		# print HTMLParser().unescape(document)
 		self.documents.append(HTMLParser().unescape(document))
@@ -121,22 +127,23 @@ class CentroidSummarizer:
 			else:
 				pass
 
-		print len(sents)
-		print len(selected_sents)
-		print "Documents", len(self.documents)
+		# print len(sents)
+		# print len(selected_sents)
+		# print "Documents", len(self.documents)
 		# print "Cosine Similarity"
 		# self.cosine_similarity(sents)						
 
 		# print "\n\nAll Sentences Summary\n\n"
 		# self.generate_summary(sents)
 
-		print "\n\nSelected Sentences\n\n"
+		# print "\n\nSelected Sentences\n"
 		summaries, removed_sentences = self.generate_summary(selected_sents)
 
 
-		self.print_document_summaries(summaries)
-		print removed_sentences
+		# self.document_summaries(summaries)
+		# print removed_sentences
 		
+		return self.document_summaries(summaries)
 		# cv = CountVectorizer()
 		# count_vec = cv.fit_transform(sents)
 		# tf_transformer = TfidfTransformer(use_idf=True)
