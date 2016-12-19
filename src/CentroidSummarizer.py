@@ -12,7 +12,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 
 
-class CentroidSummarizer:
+class CentroidSummarizer:	
+
     def __init__(self):
         self.documents = []
 
@@ -28,10 +29,16 @@ class CentroidSummarizer:
         vect = TfidfVectorizer(min_df=1)
         tfidf = vect.fit_transform(sentences)
         cosine = (tfidf * tfidf.T).A
-        print cosine
+        # print cosine
 
-    def set_documents(self, documents):
-        self.documents = documents
+    def set_documents(self,documents):
+		parsedDocuments = []
+		
+		for document in documents:
+			if len(document) > 500:
+				parsedDocuments.append(HTMLParser().unescape(document))
+		self.documents = parsedDocuments
+		
 
     def generate_summary(self, sents):
 
@@ -133,7 +140,7 @@ class CentroidSummarizer:
         # self.generate_summary(sents)
 
         # print "\n\nSelected Sentences\n"
-        summaries, removed_sentences = self.generate_summary(selected_sents)
+        summaries, removed_sentences = self.generate_summary(sents)
 
         # self.document_summaries(summaries)
         # print removed_sentences

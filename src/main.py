@@ -118,9 +118,11 @@ def main(search_term):
                 # summary = textRank(article).encode('ascii', 'ignore')
                 # article_list.append(article)
                 # summary_list.append(summary + "\n******************************************\n")
+                # sum = ""
                 # for s in fs.summarize(article, 3):
                 #     print '*', s
-                #     summary_new.append(s)
+                #     sum += s+"."
+                # summary_new.append(sum)
                 # summary_new.append("\n******************************************\n")
                 cs.add_article(article)
                 # twittersearch(url_entry[0])
@@ -131,7 +133,7 @@ def main(search_term):
                 # summary = textRank(article).encode('ascii', 'ignore')
                 article_list.append(article)
                 # summary_list.append(summary)
-                # sentiment_list.append(sentiment_analyze(link))
+                sentiment_list.append(sentiment_analyze(link))
 
                 pt, nt, p_tw, n_tw = sentiment_analyze(link, p_tw, n_tw)
                 for x in pt:
@@ -160,6 +162,21 @@ def main(search_term):
     for artic in article_dict:
         cs.set_documents(artic)
         summaries.append(cs.summarize())
+
+    outfile  = open('summary_' + search_term,'w')
+    for index, summary in  enumerate(summaries):
+        outfile.write("\n============================================\
+            LINKS: "+ str(clust_dict[index]) +"\n\n" + summary.encode('ascii','ignore'))
+    outfile.close()
+
+    outfile = open('summary1_' + search_term,'w')
+    # print(len(url_list), len(summary_new))
+    for index, summary in enumerate(summary_new):
+        outfile.write("\n============================================\
+            LINKS: "+url_list[index]+"\n\n"+ summary.encode('ascii','ignore'))
+    outfile.close()
+    
+
     pnr = "+ "+ str(len(pt_list)) +"/ - " + str(len(nt_list))
     # for clus in clust_dict:
         # print clus
