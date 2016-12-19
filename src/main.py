@@ -13,7 +13,6 @@ from cluster_articles import makeClusters
 import json
 import datetime
 
-
 DEFAULT_ENCODING = 'latin-1'
 
 
@@ -69,7 +68,6 @@ def sentiment_analyze(link, p_tw, n_tw):
                 n_tw[dates[i]] += 1
             else:
                 n_tw[dates[i]] = 1
-
 
     # print "*******************************************************"
     # print "++++++++++++++++++++++POSITIVE+++++++++++++++++++++++++"
@@ -133,7 +131,7 @@ def main(search_term):
                 # summary = textRank(article).encode('ascii', 'ignore')
                 article_list.append(article)
                 # summary_list.append(summary)
-                sentiment_list.append(sentiment_analyze(link))
+                # sentiment_list.append(sentiment_analyze(link))
 
                 pt, nt, p_tw, n_tw = sentiment_analyze(link, p_tw, n_tw)
                 for x in pt:
@@ -147,8 +145,8 @@ def main(search_term):
             except Exception as ex:
                 # print ex
                 pass
-        # print "Calling summarize"
-        # cs.summarize()
+                # print "Calling summarize"
+                # cs.summarize()
     clusters = makeClusters(article_list)
     clust_dict = [[], [], [], []]
     article_dict = [[], [], [], []]
@@ -163,23 +161,22 @@ def main(search_term):
         cs.set_documents(artic)
         summaries.append(cs.summarize())
 
-    outfile  = open('summary_' + search_term,'w')
-    for index, summary in  enumerate(summaries):
-        outfile.write("\n============================================\
-            LINKS: "+ str(clust_dict[index]) +"\n\n" + summary.encode('ascii','ignore'))
-    outfile.close()
+    # outfile = open('summary_' + search_term, 'w')
+    # for index, summary in enumerate(summaries):
+    #     outfile.write("\n============================================\
+    #         LINKS: " + str(clust_dict[index]) + "\n\n" + summary.encode('ascii', 'ignore'))
+    # outfile.close()
+    #
+    # outfile = open('summary1_' + search_term, 'w')
+    # # print(len(url_list), len(summary_new))
+    # for index, summary in enumerate(summary_new):
+    #     outfile.write("\n============================================\
+    #         LINKS: " + url_list[index] + "\n\n" + summary.encode('ascii', 'ignore'))
+    # outfile.close()
 
-    outfile = open('summary1_' + search_term,'w')
-    # print(len(url_list), len(summary_new))
-    for index, summary in enumerate(summary_new):
-        outfile.write("\n============================================\
-            LINKS: "+url_list[index]+"\n\n"+ summary.encode('ascii','ignore'))
-    outfile.close()
-    
-
-    pnr = "+ "+ str(len(pt_list)) +"/ - " + str(len(nt_list))
+    pnr = "+ " + str(len(pt_list)) + "/ - " + str(len(nt_list))
     # for clus in clust_dict:
-        # print clus
+    # print clus
 
     p_tw_key = set()
     p_dates = []
@@ -201,10 +198,12 @@ def main(search_term):
             n_dates.append(0)
 
     result = {'links': url_list, 'articles': summaries, 'positive': pt_list, 'neg': nt_list,
-              'p_users': p_users, 'n_users': n_users, 'no_stories': len(article_list), 'no_tweets': (len(pt_list)+len(nt_list)),
+              'p_users': p_users, 'n_users': n_users, 'no_stories': len(article_list),
+              'no_tweets': (len(pt_list) + len(nt_list)),
               'pnr': pnr, 'p_dates': p_dates, 'n_dates': n_dates, 'label': p_tw_key}
     # print result
     print json.dumps(result)
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:

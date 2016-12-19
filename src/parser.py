@@ -1,4 +1,3 @@
-
 import nltk
 from nltk.corpus import brown
 
@@ -16,7 +15,7 @@ regexp_tagger = nltk.RegexpTagger(
      (r'.*ing$', 'VBG'),
      (r'.*ed$', 'VBD'),
      (r'.*', 'NN')
-])
+     ])
 unigram_tagger = nltk.UnigramTagger(brown_train, backoff=regexp_tagger)
 bigram_tagger = nltk.BigramTagger(brown_train, backoff=unigram_tagger)
 cfg = {}
@@ -26,8 +25,8 @@ cfg["NNI+NN"] = "NNI"
 cfg["JJ+JJ"] = "JJ"
 cfg["JJ+NN"] = "NNI"
 
-class NPExtractor(object):
 
+class NPExtractor(object):
     def __init__(self, sentence):
         self.sentence = sentence
 

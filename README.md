@@ -62,3 +62,10 @@ $ python main.py Donald Trump
   .
   .
 ```
+```
+  The summarization, tweet fetching and sentiment anlysis of tweets code is in the src/ directory.
+  The web code for the same is in the LSA/ directory. 
+  On load of the search page, the query is sent to the python using php exec command and a json object is returned
+  The object contains all the summaries, stats about the data, tweets mentioning the articles 
+  The positive tweets are shown in blue, the negative are shown in red.
+```

@@ -12,8 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 
 
-class CentroidSummarizer:	
-
+class CentroidSummarizer:
     def __init__(self):
         self.documents = []
 
@@ -31,14 +30,13 @@ class CentroidSummarizer:
         cosine = (tfidf * tfidf.T).A
         # print cosine
 
-    def set_documents(self,documents):
-		parsedDocuments = []
-		
-		for document in documents:
-			if len(document) > 500:
-				parsedDocuments.append(HTMLParser().unescape(document))
-		self.documents = parsedDocuments
-		
+    def set_documents(self, documents):
+        parsedDocuments = []
+
+        for document in documents:
+            if len(document) > 500:
+                parsedDocuments.append(HTMLParser().unescape(document))
+        self.documents = parsedDocuments
 
     def generate_summary(self, sents):
 
@@ -110,7 +108,7 @@ class CentroidSummarizer:
                     # print value
                     else:
                         sentence_tags_dict[tag] = [index, ]
-                    # print "Set", tag, sentence_tags_dict[tag]
+                        # print "Set", tag, sentence_tags_dict[tag]
                 # print "This sentence is about: %s" % ", ".join(result)
                 sents.append(sent)
 
@@ -147,14 +145,14 @@ class CentroidSummarizer:
 
         return self.document_summaries(summaries)
 
-    # cv = CountVectorizer()
-    # count_vec = cv.fit_transform(sents)
-    # tf_transformer = TfidfTransformer(use_idf=True)
-    # tfidf = tf_transformer.fit_transform(count_vec)
-    # tf_scores = {}
-    # # print type(cv.get_feature_names()), type(tf_transformer.idf_)
-    # # print zip(cv.get_feature_names(),tf_transformer.idf_)
-    # # print(tf_transformer.idf_)
-    # for index, row in enumerate(cv.get_feature_names()):
-    # 	tf_scores[row] = tf_transformer.idf_[index]
-    # 	print row, tf_scores[row]
+        # cv = CountVectorizer()
+        # count_vec = cv.fit_transform(sents)
+        # tf_transformer = TfidfTransformer(use_idf=True)
+        # tfidf = tf_transformer.fit_transform(count_vec)
+        # tf_scores = {}
+        # # print type(cv.get_feature_names()), type(tf_transformer.idf_)
+        # # print zip(cv.get_feature_names(),tf_transformer.idf_)
+        # # print(tf_transformer.idf_)
+        # for index, row in enumerate(cv.get_feature_names()):
+        # 	tf_scores[row] = tf_transformer.idf_[index]
+        # 	print row, tf_scores[row]

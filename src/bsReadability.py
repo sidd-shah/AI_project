@@ -14,10 +14,6 @@ POSITIVE = re.compile("post|hentry|entry|content|text|body|article")
 PUNCTUATION = re.compile("""[!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]""")
 CLEANUP = re.compile("<(.*?)>")
 
-
-class ReadabilityError(Exception):
-
-
 DEFAULT_ENCODING = 'latin-1'
 
 
@@ -45,14 +41,12 @@ def grabContent(link, html, encoding=DEFAULT_ENCODING):
             parents.append(parent)
             parent.score = 0
 
-            
             if "class" in parent:
                 if NEGATIVE.match(parent["class"]):
                     parent.score -= 50
                 if POSITIVE.match(parent["class"]):
                     parent.score += 25
 
-            
             if "id" in parent:
                 if NEGATIVE.match(parent["id"]):
                     parent.score -= 50
@@ -62,13 +56,11 @@ def grabContent(link, html, encoding=DEFAULT_ENCODING):
         if parent.score is None:
             parent.score = 0
 
-        
         innerText = paragraph.renderContents(
-        ).decode(encoding)  
+        ).decode(encoding)
         if len(innerText) > 10:
             parent.score += 1
 
-        
         parent.score += innerText.count(",")
 
     for parent in parents:
@@ -78,16 +70,13 @@ def grabContent(link, html, encoding=DEFAULT_ENCODING):
     if not topParent:
         raise ReadabilityError("no topParent")
 
-    
     styleLinks = soup.findAll("link", attrs={"type": "text/css"})
     for s in styleLinks:
         s.extract()
 
-    
     for s in soup.findAll("style"):
         s.extract()
 
-    
     for ele in topParent.findAll(True):
         del ele['style']
         del ele['class']
@@ -117,7 +106,7 @@ def _fixLinks(parent, link):
 def _clean(top, tag, minWords=10000):
     tags = top.findAll(tag)
     for t in tags:
-        
+
         if t.renderContents().count(" ") < minWords:
             t.extract()
 
@@ -125,9 +114,6 @@ def _clean(top, tag, minWords=10000):
 def _killDivs(parent, encoding):
     divs = parent.findAll("div")
 
-    
-    
-    
     for d in divs:
         p = len(d.findAll("p"))
         img = len(d.findAll("img"))
@@ -137,12 +123,10 @@ def _killDivs(parent, encoding):
         pre = len(d.findAll("pre"))
         code = len(d.findAll("code"))
 
-        
         if d.renderContents().decode(encoding).count(",") < 10:
-            
+
             if (pre == 0) and (code == 0):
-                
-                
+
                 if (img > p) or (li > p) or (a > p) or (p == 0) or (embed > 0):
                     d.extract()
 
