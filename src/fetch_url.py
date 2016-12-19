@@ -11,20 +11,13 @@ def read_url(url, queue):
     try:
         data = urllib2.urlopen(url).read().decode(DEFAULT_ENCODING)
     except urllib2.HTTPError, e:
-        # print('%s: HTTPError = ' % url + str(e.code))
         pass
     except urllib2.URLError, e:
-        # print('%s: URLError = ' % url + str(e.reason))
         pass
     except httplib.HTTPException, e:
-        # print('HTTPException')
         pass
     except Exception:
-        import traceback
         pass
-        # print('generic exception: ' + traceback.format_exc())
-
-    # print('Fetched %s from %s' % (len(data), url))
     queue.put([url, data])
 
 

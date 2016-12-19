@@ -170,6 +170,3 @@ def vader(list_of_tweet_texts):
             result.append(0)
     return result
 
-
-if __name__ == "__main__":
-    print predict(["Donald Trump is awesomeadasd ", ])

@@ -31,12 +31,10 @@ class NPExtractor(object):
     def __init__(self, sentence):
         self.sentence = sentence
 
-    # Split the sentence into singlw words/tokens
     def tokenize_sentence(self, sentence):
         tokens = nltk.word_tokenize(sentence)
         return tokens
 
-    # Normalize brown corpus' tags ("NN", "NN-PL", "NNS" > "NN")
     def normalize_tags(self, tagged):
         n_tagged = []
         for t in tagged:
@@ -52,7 +50,6 @@ class NPExtractor(object):
             n_tagged.append((t[0], t[1]))
         return n_tagged
 
-    # Extract the main topics from the sentence
     def extract(self):
 
         tokens = self.tokenize_sentence(self.sentence)
@@ -78,6 +75,5 @@ class NPExtractor(object):
         matches = []
         for t in tags:
             if t[1] == "NNP" or t[1] == "NNI":
-            #if t[1] == "NNP" or t[1] == "NNI" or t[1] == "NN":
                 matches.append(t[0])
         return matches

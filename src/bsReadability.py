@@ -1,6 +1,3 @@
-# Adapted from http://github.com/scyclops/Readable-Feeds/blob/master/readability/hn.py
-# License: GPL3
-
 from __future__ import unicode_literals
 
 import os
@@ -18,20 +15,13 @@ PUNCTUATION = re.compile("""[!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]""")
 CLEANUP = re.compile("<(.*?)>")
 
 
-# TODO: have sub-classes for specific exceptions
 class ReadabilityError(Exception):
-    """Base class for all readability related exceptions"""
 
 
-# XXX: we should auto-detect the encoding
 DEFAULT_ENCODING = 'latin-1'
 
 
 def grabContent(link, html, encoding=DEFAULT_ENCODING):
-    """Return (TITLE, CONTENT)
-where CONTENT is the readable version of ``html``
-"""
-    # Replace all doubled-up <BR> tags with <P> tags, and (TODO) remove fonts.
     replaceBrs = re.compile("<br */? *>[ \r\n]*<br */? *>")
     html = re.sub(replaceBrs, "</p><p>", html)
 
@@ -40,15 +30,12 @@ where CONTENT is the readable version of ``html``
     except HTMLParser.HTMLParseError as e:
         raise ReadabilityError('BeautifulSoup parse error: %s' % e)
 
-    # REMOVE SCRIPTS
     for s in soup.findAll("script"):
         s.extract()
 
     allParagraphs = soup.findAll("p")
     topParent = None
 
-    # Study all the paragraphs and find the chunk that has the best score.
-    # A score is determined by things like: Number of <p>'s, commas, special classes, etc.
     parents = []
     for paragraph in allParagraphs:
 
@@ -58,14 +45,14 @@ where CONTENT is the readable version of ``html``
             parents.append(parent)
             parent.score = 0
 
-            # Look for a special classname
+            
             if "class" in parent:
                 if NEGATIVE.match(parent["class"]):
                     parent.score -= 50
                 if POSITIVE.match(parent["class"]):
                     parent.score += 25
 
-            # Look for a special ID
+            
             if "id" in parent:
                 if NEGATIVE.match(parent["id"]):
                     parent.score -= 50
@@ -75,16 +62,15 @@ where CONTENT is the readable version of ``html``
         if parent.score is None:
             parent.score = 0
 
-        # Add a point for the paragraph found
+        
         innerText = paragraph.renderContents(
-        ).decode(encoding)  # "".join(paragraph.findAll(text=True))
+        ).decode(encoding)  
         if len(innerText) > 10:
             parent.score += 1
 
-        # Add points for any commas within this paragraph
+        
         parent.score += innerText.count(",")
 
-    # Assignment from index for performance. See http://www.peachpit.com/articles/article.aspx?p=31567&seqNum=5
     for parent in parents:
         if (not topParent) or (parent.score > topParent.score):
             topParent = parent
@@ -92,16 +78,16 @@ where CONTENT is the readable version of ``html``
     if not topParent:
         raise ReadabilityError("no topParent")
 
-    # REMOVES ALL STYLESHEETS ...
+    
     styleLinks = soup.findAll("link", attrs={"type": "text/css"})
     for s in styleLinks:
         s.extract()
 
-    # Remove all style tags in head
+    
     for s in soup.findAll("style"):
         s.extract()
 
-    # CLEAN STYLES FROM ELEMENTS IN TOP PARENT
+    
     for ele in topParent.findAll(True):
         del ele['style']
         del ele['class']
@@ -131,7 +117,7 @@ def _fixLinks(parent, link):
 def _clean(top, tag, minWords=10000):
     tags = top.findAll(tag)
     for t in tags:
-        # If the text content isn't laden with words, remove the child
+        
         if t.renderContents().count(" ") < minWords:
             t.extract()
 
@@ -139,9 +125,9 @@ def _clean(top, tag, minWords=10000):
 def _killDivs(parent, encoding):
     divs = parent.findAll("div")
 
-    # Gather counts for other typical elements embedded within.
-    # Traverse backwards so we can remove nodes at the same time without
-    # effectiving the traversal.
+    
+    
+    
     for d in divs:
         p = len(d.findAll("p"))
         img = len(d.findAll("img"))
@@ -151,12 +137,12 @@ def _killDivs(parent, encoding):
         pre = len(d.findAll("pre"))
         code = len(d.findAll("code"))
 
-        # If the number of commas is less than 10 (bad sign) ...
+        
         if d.renderContents().decode(encoding).count(",") < 10:
-            # DEVIATION: XXX: why do this?
+            
             if (pre == 0) and (code == 0):
-                # Add the number of non-paragraph elements is more than
-                # paragraphs or other ominous signs
+                
+                
                 if (img > p) or (li > p) or (a > p) or (p == 0) or (embed > 0):
                     d.extract()
 
