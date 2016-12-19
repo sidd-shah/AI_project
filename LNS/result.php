@@ -290,28 +290,38 @@ $art = new Article($query);
         echo "'$labe',";
       }
     ?>];
+    var pd = [<?php
+      foreach ($art->p_dates as $count){
+        echo "$count,";
+      }
+    ?>];
+      var nd = [<?php
+      foreach ($art->n_dates as $count){
+        echo "$count,";
+      }
+    ?>];
     var areaChartData = {
-      labels: lab,
+      labels: lab,  
       datasets: [
         {
-          label: "Electronics",
+          label: "Positive",
           fillColor: "rgba(210, 214, 222, 1)",
           strokeColor: "rgba(210, 214, 222, 1)",
           pointColor: "rgba(210, 214, 222, 1)",
           pointStrokeColor: "#c1c7d1",
           pointHighlightFill: "#fff",
           pointHighlightStroke: "rgba(220,220,220,1)",
-          data: [65, 59, 80, 81, 56, 55, 40]
+          data: pd
         },
         {
-          label: "Digital Goods",
+          label: "Negative",
           fillColor: "rgba(60,141,188,0.9)",
           strokeColor: "rgba(60,141,188,0.8)",
           pointColor: "#3b8bba",
           pointStrokeColor: "rgba(60,141,188,1)",
           pointHighlightFill: "#fff",
           pointHighlightStroke: "rgba(60,141,188,1)",
-          data: [28, 48, 40, 19, 86, 27, 90]
+          data: nd
         }
       ]
     };

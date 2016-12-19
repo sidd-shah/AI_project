@@ -2,10 +2,11 @@ def get_tweets(keyword, limit=1000, debug=False):
     import tweepy
     result = set()
     auth = tweepy.AppAuthHandler('NVHNnaLGqNimBCNPl20nXD7bw', 'cmqdCIuUAlOqdGaExEarMbTcn68Qly65GnTj665COpj5NH2wjb')
+    auth = tweepy.AppAuthHandler('GebRqhJNATDN5C4DgHSlJiDKm', '1tkgK3ic3mJollNwU6CrQIncFslC34T1hVg2EmxfBnZKNvLaS9')
 
     api = tweepy.API(auth,
-                     wait_on_rate_limit=True,
-                     wait_on_rate_limit_notify=True)
+                     wait_on_rate_limit=False,
+                     wait_on_rate_limit_notify=False)
 
     for tweet in tweepy.Cursor(api.search,
                                q=keyword,
