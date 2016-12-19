@@ -11,6 +11,10 @@ class Article
 	var $no_tweets;
 	var $no_stories;
 	var $pnr;
+	var $links;
+	var $p_dates;
+	var $n_dates;
+	var $labels;
 		
 	// -- Function Name : __construct
 	// -- Params : $ID
@@ -42,6 +46,11 @@ class Article
 			$this->n_users = $data["n_users"];
 			$this->p_users = $data["p_users"];
 			$this->pnr = $data["pnr"];
+			$this->links = $data["links"];
+			$this->labels = $data['label'];
+			$this->p_dates = $data["p_dates"];
+			$this->n_dates = $data["n_dates"];
+
 			
 		}
 		
@@ -50,10 +59,14 @@ class Article
 
 			$item_header = '<li><i class="fa fa-user bg-aqua"></i>
 								<div class="timeline-item">
-				            		<span class="time"><i class="fa fa-clock-o"></i>12:05</span>
+				            	
 				            		<h3 class="timeline-header">
 				            			<a href="#">';
-
+			$item_header2 = '<li><i class="fa fa-user bg-red"></i>
+								<div class="timeline-item">
+				            			
+				            		<h3 class="timeline-header">
+				            			<a href="#">';
 			$item_main = '</a></h3>';
 
 			$item_trailer = '</div></li>';
@@ -75,7 +88,7 @@ class Article
 				}
 				$index = 0;
 				foreach ($this->n_tweets as $tweet) {
-					$content .= $item_header;
+					$content .= $item_header2;
 					$content .= $this->n_users[$index];
 					$content .= $item_main;
 					$content .= $tweet;
@@ -111,8 +124,26 @@ class Article
 
 			return $content;
 		}
-		function getNoTweets() {
-			return $this->no_tweets;
+	
+		function getLinks() {
+			$link_head = '<div style="border: 1px solid rgb(238, 238, 238); padding: 5px; margin: 5px;"><a href=';
+			$link_end = '\>';
+			$link_tail = '</a></div>';
+			$content = "";
+			if (is_array($this->links) || is_object($this->links))
+			{
+				foreach ($this->links as $link) {
+				// echo "ART: <br> $article <br>";
+					// $content = "$content $article_head $article $article_tail";
+					$content .= $link_head;
+					$content .= $link;
+					$content .= $link_end;
+					$content .= $link;
+					$content .= $link_tail;
+				// $content .= $article;
+				}
+			}
+			return $content;
 		}
 
 }

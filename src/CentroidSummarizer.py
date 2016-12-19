@@ -22,8 +22,6 @@ class CentroidSummarizer:
             if index in summaries:
                 # print "\n\n\nDocument ", index
                 result += ". ".join(re.sub('[\t|\n]+', '', summary.strip()) for summary in summaries[index])
-            else:
-                print "Index not found"
         return result
 
     def cosine_similarity(self, sentences):

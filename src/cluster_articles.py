@@ -44,7 +44,7 @@ def makeClusters(article_list):
                             use_idf=True, tokenizer=tokenize_and_stem, ngram_range=(1, 2)).fit_transform(article_list)
     dist = cosine_similarity(tfidf)
     # print dist
-    num_clusters = 5
+    num_clusters = 4
 
     km = KMeans(n_clusters=num_clusters)
     km.fit(tfidf)

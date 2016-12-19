@@ -109,7 +109,8 @@ def clean(list_of_tweets_texts):
     dataset = list_of_tweets_texts
     tweets = []
     authors = []
-    for mystring, username in dataset:
+    dates = []
+    for mystring, username, date in dataset:
         try:
 
             mystring.encode('utf8', 'ignore')
@@ -123,9 +124,10 @@ def clean(list_of_tweets_texts):
                 pass
             tweets.append(sentence)
             authors.append(username)
+            dates.append(date)
         except (IndexError, UnicodeDecodeError) as e:
             pass
-    return tweets, authors
+    return tweets, authors, dates
 
 
 def predict(list_of_tweet_texts):

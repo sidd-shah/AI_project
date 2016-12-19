@@ -11,7 +11,8 @@ from cursor import get_tweets
 from summ import FrequencySummarizer
 from cluster_articles import makeClusters
 import json
-import pprint
+import datetime
+
 
 DEFAULT_ENCODING = 'latin-1'
 
@@ -39,26 +40,36 @@ def get_only_text(url):
     return soup.title.text, text
 
 
-def sentiment_analyze(link):
+def sentiment_analyze(link, p_tw, n_tw):
     # print "Scanning tweets for link %s" % link
     tweets = get_tweets(link)
     texts = []
     for tweet in tweets:
-        texts.append([tweet.text, tweet.user.name])
+        texts.append([tweet.text, tweet.user.name, tweet.created_at.strftime("%m/%d/%Y")])
 
-    texts, authors = clean(texts)
+    texts, authors, dates = clean(texts)
     analysis = predict(texts)
     vader_analysis = vader(texts)
 
     positive_tweets = []
     negative_tweets = []
 
+    # print dates
     for i in range(len(texts)):
         score = 0.25 * analysis[i] + 0.75 * vader_analysis[i]
         if score > 0.8:
             positive_tweets.append([texts[i], authors[i]])
+            if dates[i] in p_tw.keys():
+                p_tw[dates[i]] += 1
+            else:
+                p_tw[dates[i]] = 1
         elif score < -0.8:
             negative_tweets.append([texts[i], authors[i]])
+            if dates[i] in n_tw.keys():
+                n_tw[dates[i]] += 1
+            else:
+                n_tw[dates[i]] = 1
+
 
     # print "*******************************************************"
     # print "++++++++++++++++++++++POSITIVE+++++++++++++++++++++++++"
@@ -69,7 +80,7 @@ def sentiment_analyze(link):
     # print "*******************************************************"
     # print negative_tweets
 
-    return positive_tweets, negative_tweets
+    return positive_tweets, negative_tweets, p_tw, n_tw
 
 
 def main(search_term):
@@ -84,8 +95,12 @@ def main(search_term):
     pt_list = []
     nt_list = []
     p_users = []
+    p_dates = []
+    n_dates = []
     n_users = []
     url_list = []
+    p_tw = {}
+    n_tw = {}
     summary_new = []
     if not result_links:
         print "No links found"
@@ -118,21 +133,23 @@ def main(search_term):
                 # summary_list.append(summary)
                 # sentiment_list.append(sentiment_analyze(link))
 
-                pt, nt = sentiment_analyze(link)
+                pt, nt, p_tw, n_tw = sentiment_analyze(link, p_tw, n_tw)
                 for x in pt:
                     pt_list.append(x[0])
                     p_users.append(x[1])
+
                 for y in nt:
                     nt_list.append(y[0])
                     n_users.append(y[1])
+
             except Exception as ex:
                 # print ex
                 pass
         # print "Calling summarize"
         # cs.summarize()
     clusters = makeClusters(article_list)
-    clust_dict = [[], [], [], [], []]
-    article_dict = [[], [], [], [], []]
+    clust_dict = [[], [], [], []]
+    article_dict = [[], [], [], []]
     summaries = []
     cs = CentroidSummarizer()
 
@@ -146,9 +163,29 @@ def main(search_term):
     pnr = "+ "+ str(len(pt_list)) +"/ - " + str(len(nt_list))
     # for clus in clust_dict:
         # print clus
-    result = {'status': clust_dict, 'articles': summaries, 'positive': pt_list, 'neg': nt_list,
-              'p_users': p_users, 'n_users': n_users, 'no_stories': len(article_list), 'no_tweets': (len(pt)+len(nt)),
-              'pnr': pnr}
+
+    p_tw_key = set()
+    p_dates = []
+    n_dates = []
+    for key in p_tw.keys():
+        p_tw_key.add(key)
+    for key in n_tw.keys():
+        p_tw_key.add(key)
+    p_tw_key = list(p_tw_key)
+    for key in p_tw_key:
+        if p_tw.has_key(key):
+            p_dates.append(p_tw[key])
+        else:
+            p_dates.append(0)
+
+        if n_tw.has_key(key):
+            n_dates.append(n_tw[key])
+        else:
+            n_dates.append(0)
+
+    result = {'links': url_list, 'articles': summaries, 'positive': pt_list, 'neg': nt_list,
+              'p_users': p_users, 'n_users': n_users, 'no_stories': len(article_list), 'no_tweets': (len(pt_list)+len(nt_list)),
+              'pnr': pnr, 'p_dates': p_dates, 'n_dates': n_dates, 'label': p_tw_key}
     # print result
     print json.dumps(result)
 
