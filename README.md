@@ -1,7 +1,11 @@
 # AI Project 
 
 ### Title: News summarization and twitter metainfo sentiment analysis  
+<<<<<<< HEAD
+In partial fulfillment of the coursework for CSE537: Artificial Intelligence  
+=======
 In partial fulfillment of the coursework for CSE5XX: Artificial Intelligence  
+>>>>>>> 8a7a6030fb9a78b5eba17a287e1729faeef816f5
 Stony Brook University, Fall '16
 
 ### Authors
@@ -61,8 +65,11 @@ $ python main.py Donald Trump
   .
   .
   .
+<<<<<<< HEAD
+=======
 ```
 ```
+>>>>>>> 8a7a6030fb9a78b5eba17a287e1729faeef816f5
   The summarization, tweet fetching and sentiment anlysis of tweets code is in the src/ directory.
   The web code for the same is in the LSA/ directory. 
   On load of the search page, the query is sent to the python using php exec command and a json object is returned
